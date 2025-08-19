@@ -50,6 +50,28 @@ def visualize_data(data):
     plt.tight_layout()
     plt.show()
 
+# Leaderboard visualization (sorted by rank)
+def leaderboard(data):
+    # Sort students by average descending
+    sorted_data = sorted(data.items(), key=lambda x: calculate_average(x[1]["marks"]), reverse=True)
+    
+    names = [info["name"] for _, info in sorted_data]
+    averages = [calculate_average(info["marks"]) for _, info in sorted_data]
+
+    plt.figure(figsize=(8, 5))
+    bars = plt.barh(names, averages, color="lightgreen", edgecolor="black")
+    plt.xlabel("Average Marks")
+    plt.title("Leaderboard - Top Students")
+    plt.gca().invert_yaxis()  # Top scorer on top
+    
+    # Add average labels next to bars
+    for bar, avg in zip(bars, averages):
+        plt.text(bar.get_width() + 0.5, bar.get_y() + bar.get_height()/2,
+                 f"{avg:.1f}", va="center")
+
+    plt.tight_layout()
+    plt.show()
+
 # Main menu
 def main():
     data = load_data()
@@ -59,7 +81,8 @@ def main():
         print("1. Display all students")
         print("2. Add a new student")
         print("3. Visualize student averages")
-        print("4. Exit")
+        print("4. Show Leaderboard")
+        print("5. Exit")
 
         choice = input("Enter choice: ")
 
@@ -75,6 +98,8 @@ def main():
         elif choice == "3":
             visualize_data(data)
         elif choice == "4":
+            leaderboard(data)
+        elif choice == "5":
             break
         else:
             print("Invalid choice! Try again.")
